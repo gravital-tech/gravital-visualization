@@ -2,7 +2,19 @@
  * Custom orbital force implementation for d3-force
  * Creates orbital motion of child nodes around parent nodes
  */
-export function orbitalForce() {
+
+// Custom force interface that extends d3's Force
+export interface OrbitalForce {
+  (alpha: number): void;
+  initialize(nodes: any[], links?: any[]): void;
+  strength(strength?: number): number | OrbitalForce;
+  focalPoint(node?: any): any | OrbitalForce;
+}
+
+/**
+ * Creates a custom orbital force for use with d3-force
+ */
+export function orbitalForce(): OrbitalForce {
   let nodes: any[] = [];
   let links: any[] = [];
   let strength = 1;
@@ -108,28 +120,34 @@ export function orbitalForce() {
   };
 
   // Return the force function
-  return force;
+  return force as OrbitalForce;
 }
 
 /**
  * Sets up orbital physics in the force graph
+ * @returns The orbital force instance
  */
-export function setupOrbitalPhysics(forceGraph: any, orbitalStrength: number = 1) {
-  if (!forceGraph) return;
+export function setupOrbitalPhysics(forceGraph: any, orbitalStrength: number = 1): OrbitalForce {
+  if (!forceGraph) {
+    throw new Error('Force graph reference is required');
+  }
 
   // Get the d3 force simulation
   const simulation = forceGraph.d3Force();
-  if (!simulation) return;
+  if (!simulation) {
+    throw new Error('Simulation not available from force graph');
+  }
 
   // Create and add our custom orbital force
-  const orbital = orbitalForce().strength(orbitalStrength);
+  const orbital = orbitalForce();
+  orbital.strength(orbitalStrength);
   simulation.force('orbital', orbital);
 
   // Add links to the orbital force when links change
   simulation.on('tick', () => {
     const links = forceGraph.graphData().links;
     const orbitalForce = simulation.force('orbital');
-    if (orbitalForce && orbitalForce.initialize && links) {
+    if (orbitalForce && typeof orbitalForce.initialize === 'function' && links) {
       orbitalForce.initialize(simulation.nodes(), links);
     }
   });

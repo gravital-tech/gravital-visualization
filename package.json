@@ -1,0 +1,36 @@
+{
+  "name": "gravital-visualization",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Gravital Ecosystem Visualization monorepo",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{js,ts,tsx,md,json}\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=!examples/* && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.25",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "turbo": "^2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@8.10.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
